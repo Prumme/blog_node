@@ -4,7 +4,8 @@
   export const load = async ({ fetch }) => {
     return {
       props: {
-        recentPosts: await fetch('/posts.json?limit=10').then((res) => res.json())
+        recentPosts: await fetch('/posts.json?limit=3').then((res) => res.json()),
+        allPosts: await fetch('/posts.json').then((res) => res.json())
       }
     }
   }
@@ -13,9 +14,12 @@
 <script>
   import ButtonLink from '$lib/components/ButtonLink.svelte'
   import PostPreview from '$lib/components/PostPreview.svelte'
+  import PostTitle from '$lib/components/PostTitle.svelte'
+
   import { name } from '$lib/info.js'
 
   export let recentPosts
+  export let allPosts
 </script>
 
 <svelte:head>
@@ -47,6 +51,16 @@
     Recent Posts
     <ButtonLink href="/posts" size="small" raised={false} class="opacity-60">View All</ButtonLink>
   </h2>
+  <h3>Nombre total de post : {allPosts.length}</h3>
+
+  <div class="flex flex-col">
+    {#each allPosts as post}
+      <div class="flex flex-col dark:border-slate-700">
+        <PostTitle {post} />
+      </div>
+    {/each}
+  </div>
+
   <div class="grid gap-4 grid-cols-1 sm:grid-cols-2">
     {#each recentPosts as post}
       <div class="flex p-4 border border-slate-300 dark:border-slate-700 rounded-lg">
